@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/firebase_service.dart';
 import '../models/user_model.dart';
 import '../models/challenge_model.dart';
+import 'quiz_screen.dart';
 import 'widgets/mood_slider.dart';
 import 'widgets/funny_challenges.dart';
 import 'feedback_screen.dart';
@@ -34,8 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    // Fetch user
-    UserModel? user = await _service.getUserDetails(_service.currentUser!.uid);
+    // Fetch user stream
+    _service.userStream(_service.currentUser!.uid).listen((user) {
+      if (mounted) {
+        setState(() {
+          _user = user;
+          _isLoading = false;
+        });
+      }
+    });
     
     // Fetch challenges stream
     _service.getChallenges().listen((challengesList) {
@@ -45,27 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     });
-
-    if (mounted) {
-      setState(() {
-        _user = user;
-        _isLoading = false;
-      });
-    }
   }
 
   void _updateMood(String newMood) async {
     if (_user != null) {
       await _service.updateMood(_user!.uid, newMood);
-      setState(() {
-        _user = UserModel(
-          uid: _user!.uid,
-          email: _user!.email,
-          name: _user!.name,
-          mood: newMood,
-          completedChallenges: _user!.completedChallenges,
-        );
-      });
     }
   }
 
@@ -138,6 +130,11 @@ class _HomeScreenState extends State<HomeScreen> {
               'Welcome back, ${_user!.name}!',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 5),
+            Text(
+              'Your Score: 💰 ${_user!.score}',
+              style: const TextStyle(fontSize: 18, color: Colors.orange, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
             
             // Mood Slider
@@ -159,6 +156,25 @@ class _HomeScreenState extends State<HomeScreen> {
               completedIds: _user!.completedChallenges,
               onComplete: _completeChallenge,
             ),
+
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              ),
+              icon: const Icon(Icons.question_answer),
+              label: const Text('Play Funny Quizzes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => QuizScreen(userId: _user!.uid)),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

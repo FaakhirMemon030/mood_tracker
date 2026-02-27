@@ -78,6 +78,16 @@ class FirebaseService {
     return null;
   }
 
+  // Stream of current user data
+  Stream<UserModel?> userStream(String uid) {
+    return _firestore.collection('users').doc(uid).snapshots().map((doc) {
+      if (doc.exists && doc.data() != null) {
+        return UserModel.fromMap(doc.data()!, doc.id);
+      }
+      return null;
+    });
+  }
+
   // Update Mood
   Future<void> updateMood(String uid, String mood) async {
     await _firestore.collection('users').doc(uid).update({'mood': mood});

@@ -356,6 +356,65 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
       },
     );
   }
+  void _showQuizDialog({QuizModel? existing}) {
+    final quesCtrl = TextEditingController(text: existing?.question ?? '');
+    final opt1Ctrl = TextEditingController(text: (existing?.options.length ?? 0) > 0 ? existing!.options[0] : '');
+    final opt2Ctrl = TextEditingController(text: (existing?.options.length ?? 0) > 1 ? existing!.options[1] : '');
+    final opt3Ctrl = TextEditingController(text: (existing?.options.length ?? 0) > 2 ? existing!.options[2] : '');
+    final opt4Ctrl = TextEditingController(text: (existing?.options.length ?? 0) > 3 ? existing!.options[3] : '');
+    final feedCtrl = TextEditingController(text: existing?.funnyFeedback ?? 'Hah! You got it right! 😂');
+    int correctIdx = existing?.correctOptionIndex ?? 0;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(existing == null ? 'Add Funny Quiz' : 'Edit Quiz'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(controller: quesCtrl, decoration: const InputDecoration(labelText: 'Question')),
+                    TextField(controller: opt1Ctrl, decoration: const InputDecoration(labelText: 'Option 1')),
+                    TextField(controller: opt2Ctrl, decoration: const InputDecoration(labelText: 'Option 2')),
+                    TextField(controller: opt3Ctrl, decoration: const InputDecoration(labelText: 'Option 3')),
+                    TextField(controller: opt4Ctrl, decoration: const InputDecoration(labelText: 'Option 4')),
+                    const SizedBox(height: 10),
+                    const Text('Correct Option:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    DropdownButton<int>(
+                      value: correctIdx,
+                      items: [0, 1, 2, 3].map((i) => DropdownMenuItem(value: i, child: Text('Option ${i + 1}'))).toList(),
+                      onChanged: (val) => setDialogState(() => correctIdx = val!),
+                    ),
+                    TextField(controller: feedCtrl, decoration: const InputDecoration(labelText: 'Funny Feedback')),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                ElevatedButton(
+                  onPressed: () async {
+                    final quiz = QuizModel(
+                      id: existing?.id ?? '',
+                      question: quesCtrl.text.trim(),
+                      options: [opt1Ctrl.text.trim(), opt2Ctrl.text.trim(), opt3Ctrl.text.trim(), opt4Ctrl.text.trim()],
+                      correctOptionIndex: correctIdx,
+                      funnyFeedback: feedCtrl.text.trim(),
+                    );
+                    await _service.saveQuiz(quiz);
+                    if (mounted) Navigator.pop(context);
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
