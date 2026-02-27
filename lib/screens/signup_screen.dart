@@ -61,7 +61,7 @@ class _SignupScreenState extends State<SignupScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(Icons.person_add, size: 80, color: Colors.blueAccent),
+                const Icon(Icons.person_add, size: 80, color: Colors.amber),
                 const SizedBox(height: 30),
                 TextFormField(
                   controller: _nameController,
