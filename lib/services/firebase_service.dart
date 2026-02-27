@@ -132,7 +132,11 @@ class FirebaseService {
     if (challenge.id.isEmpty) {
       await _firestore.collection('challenges').add(challenge.toMap());
     } else {
-      await _firestore.collection('challenges').doc(challenge.id).update(challenge.toMap());
     }
+  }
+
+  // Delete Challenge
+  Future<void> deleteChallenge(String id) async {
+    await _firestore.collection('challenges').doc(id).delete();
   }
 }

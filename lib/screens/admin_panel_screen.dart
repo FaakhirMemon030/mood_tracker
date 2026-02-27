@@ -118,16 +118,65 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           
           return ListView.builder(
             itemCount: challenges.length,
+            padding: const EdgeInsets.all(10),
             itemBuilder: (context, index) {
               final challenge = challenges[index];
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: ListTile(
-                  title: Text(challenge.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text(challenge.description),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.orange),
-                    onPressed: () => _showChallengeDialog(existing: challenge),
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                margin: const EdgeInsets.only(bottom: 15),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(
+                      colors: [Colors.purple.withOpacity(0.1), Colors.blue.withOpacity(0.05)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    title: Text(
+                      challenge.title,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.purple),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(challenge.description),
+                          const SizedBox(height: 5),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '💰 ${challenge.points} Points',
+                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                          onPressed: () => _showChallengeDialog(existing: challenge),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.redAccent),
+                          onPressed: () async {
+                             // Simple confirmation logic can be added here
+                             await _service.deleteChallenge(challenge.id);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -141,43 +190,93 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   void _showChallengeDialog({ChallengeModel? existing}) {
     final titleCtrl = TextEditingController(text: existing?.title ?? '');
     final descCtrl = TextEditingController(text: existing?.description ?? '');
+    final pointsCtrl = TextEditingController(text: (existing?.points ?? 10).toString());
+
+    final List<Map<String, String>> funnyPresets = [
+      {'title': '🦆 Duck Walk', 'desc': 'Walk like a duck across the room for 1 minute!'},
+      {'title': '🪞 Mirror Hype', 'desc': 'Tell yourself 5 things you love about yourself in the mirror.'},
+      {'title': '🎤 Bathroom Concert', 'desc': 'Sing a random song loudly like you\'re at a concert.'},
+      {'title': '💃 Impromptu Dance', 'desc': 'Dance to your favorite song like no one is watching.'},
+      {'title': '🤣 Dad Joke Master', 'desc': 'Tell a funny joke to a friend or family member.'},
+      {'title': '👅 Tongue Twister', 'desc': 'Say "She sells seashells by the seashore" 10 times fast!'},
+      {'title': '🦒 Giraffe Mode', 'desc': 'Try to reach something high up without using a stool.'},
+      {'title': '🥨 Human Pretzel', 'desc': 'Try to touch your toes without bending your knees!'},
+    ];
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(existing == null ? 'Add Challenge' : 'Edit Challenge'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleCtrl,
-                decoration: const InputDecoration(labelText: 'Title'),
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(existing == null ? 'Add Challenge' : 'Edit Challenge'),
+                  if (existing == null)
+                    PopupMenuButton<Map<String, String>>(
+                      icon: const Icon(Icons.auto_awesome, color: Colors.purple),
+                      tooltip: 'Tarakhta Pharkta Presets',
+                      onSelected: (preset) {
+                        setDialogState(() {
+                          titleCtrl.text = preset['title']!;
+                          descCtrl.text = preset['desc']!;
+                        });
+                      },
+                      itemBuilder: (context) => funnyPresets.map((p) => PopupMenuItem(
+                        value: p,
+                        child: Text(p['title']!),
+                      )).toList(),
+                    ),
+                ],
               ),
-              TextField(
-                controller: descCtrl,
-                decoration: const InputDecoration(labelText: 'Description'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                      hintText: 'e.g. 🦆 Duck Walk',
+                    ),
+                  ),
+                  TextField(
+                    controller: descCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      hintText: 'What should the user do?',
+                    ),
+                    maxLines: 2,
+                  ),
+                  TextField(
+                    controller: pointsCtrl,
+                    decoration: const InputDecoration(labelText: 'Points'),
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final challenge = ChallengeModel(
-                  id: existing?.id ?? '', // empty id will let firebase generate one
-                  title: titleCtrl.text.trim(),
-                  description: descCtrl.text.trim(),
-                );
-                await _service.saveChallenge(challenge);
-                if (mounted) Navigator.pop(context);
-              },
-              child: const Text('Save'),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+                  onPressed: () async {
+                    final challenge = ChallengeModel(
+                      id: existing?.id ?? '',
+                      title: titleCtrl.text.trim(),
+                      description: descCtrl.text.trim(),
+                      points: int.tryParse(pointsCtrl.text) ?? 10,
+                    );
+                    await _service.saveChallenge(challenge);
+                    if (mounted) Navigator.pop(context);
+                  },
+                  child: const Text('Save', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            );
+          }
         );
       },
     );
