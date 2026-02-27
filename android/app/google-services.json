@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "238117498783",
+    "project_id": "moodscope-d8db9",
+    "storage_bucket": "moodscope-d8db9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238117498783:android:77bf3502beeedfbd6297aa",
+        "android_client_info": {
+          "package_name": "com.example.mood_tracker_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "238117498783-ooalq4s33d2c34m7kca7d2r7hfivb6bt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhAduGa9xsHSQDJV6P-e_eHiJcDyJ1XBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "238117498783-ooalq4s33d2c34m7kca7d2r7hfivb6bt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "238117498783-s1qlfjdeek5ismsjpmq2mtso54irnn3e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.moodscapeApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238117498783:android:f5661bb3b73c469a6297aa",
+        "android_client_info": {
+          "package_name": "com.example.moodscape_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "238117498783-ooalq4s33d2c34m7kca7d2r7hfivb6bt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhAduGa9xsHSQDJV6P-e_eHiJcDyJ1XBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "238117498783-ooalq4s33d2c34m7kca7d2r7hfivb6bt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "238117498783-s1qlfjdeek5ismsjpmq2mtso54irnn3e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.moodscapeApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
