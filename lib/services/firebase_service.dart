@@ -139,4 +139,31 @@ class FirebaseService {
   Future<void> deleteChallenge(String id) async {
     await _firestore.collection('challenges').doc(id).delete();
   }
+
+  // --- Quizzes ---
+
+  Stream<List<QuizModel>> getQuizzes() {
+    return _firestore.collection('quizzes').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => QuizModel.fromMap(doc.data(), doc.id)).toList();
+    });
+  }
+
+  Future<void> saveQuiz(QuizModel quiz) async {
+    if (quiz.id.isEmpty) {
+      await _firestore.collection('quizzes').add(quiz.toMap());
+    } else {
+      await _firestore.collection('quizzes').doc(quiz.id).update(quiz.toMap());
+    }
+  }
+
+  Future<void> deleteQuiz(String id) async {
+    await _firestore.collection('quizzes').doc(id).delete();
+  }
+
+  Future<void> completeQuiz(String uid, String quizId, int points) async {
+    await _firestore.collection('users').doc(uid).update({
+      'completedQuizzes': FieldValue.arrayUnion([quizId]),
+      'score': FieldValue.increment(points),
+    });
+  }
 }

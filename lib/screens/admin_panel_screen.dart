@@ -188,6 +188,76 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     );
   }
 
+  // --- Quizzes Tab ---
+  Widget _buildQuizzesTab() {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showQuizDialog(),
+        child: const Icon(Icons.add_comment),
+      ),
+      body: StreamBuilder<List<QuizModel>>(
+        stream: _service.getQuizzes(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0));
+          final quizzes = snapshot.data!;
+          
+          return ListView.builder(
+            itemCount: quizzes.length,
+            padding: const EdgeInsets.all(10),
+            itemBuilder: (context, index) {
+              final quiz = quizzes[index];
+              return Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                margin: const EdgeInsets.only(bottom: 15),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(
+                      colors: [Colors.orange.withOpacity(0.1), Colors.red.withOpacity(0.05)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    title: Text(
+                      quiz.question,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                         const SizedBox(height: 5),
+                         Text('Options: ${quiz.options.join(", ")}', style: const TextStyle(fontSize: 12)),
+                         Text('Correct: ${quiz.options[quiz.correctOptionIndex]}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                          onPressed: () => _showQuizDialog(existing: quiz),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.redAccent),
+                          onPressed: () async {
+                             await _service.deleteQuiz(quiz.id);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
   void _showChallengeDialog({ChallengeModel? existing}) {
     final titleCtrl = TextEditingController(text: existing?.title ?? '');
     final descCtrl = TextEditingController(text: existing?.description ?? '');
