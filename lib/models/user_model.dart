@@ -12,6 +12,8 @@ class UserModel {
     required this.name,
     this.mood = 'Neutral',
     this.completedChallenges = const [],
+    this.completedQuizzes = const [],
+    this.score = 0,
     this.isBanned = false,
   });
 
@@ -22,6 +24,8 @@ class UserModel {
       name: map['name'] ?? '',
       mood: map['mood'] ?? 'Neutral',
       completedChallenges: List<String>.from(map['completedChallenges'] ?? []),
+      completedQuizzes: List<String>.from(map['completedQuizzes'] ?? []),
+      score: map['score'] ?? 0,
       isBanned: map['isBanned'] ?? false,
     );
   }
@@ -32,6 +36,8 @@ class UserModel {
       'name': name,
       'mood': mood,
       'completedChallenges': completedChallenges,
+      'completedQuizzes': completedQuizzes,
+      'score': score,
       'isBanned': isBanned,
     };
   }

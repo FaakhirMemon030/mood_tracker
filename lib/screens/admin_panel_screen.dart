@@ -4,6 +4,7 @@ import '../services/firebase_service.dart';
 import '../models/user_model.dart';
 import '../models/feedback_model.dart';
 import '../models/challenge_model.dart';
+import '../models/quiz_model.dart';
 import 'login_screen.dart';
 
 class AdminPanelScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -194,13 +195,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
     final List<Map<String, String>> funnyPresets = [
       {'title': '🦆 Duck Walk', 'desc': 'Walk like a duck across the room for 1 minute!'},
-      {'title': '🪞 Mirror Hype', 'desc': 'Tell yourself 5 things you love about yourself in the mirror.'},
-      {'title': '🎤 Bathroom Concert', 'desc': 'Sing a random song loudly like you\'re at a concert.'},
-      {'title': '💃 Impromptu Dance', 'desc': 'Dance to your favorite song like no one is watching.'},
-      {'title': '🤣 Dad Joke Master', 'desc': 'Tell a funny joke to a friend or family member.'},
-      {'title': '👅 Tongue Twister', 'desc': 'Say "She sells seashells by the seashore" 10 times fast!'},
-      {'title': '🦒 Giraffe Mode', 'desc': 'Try to reach something high up without using a stool.'},
-      {'title': '🥨 Human Pretzel', 'desc': 'Try to touch your toes without bending your knees!'},
+      {'title': '🦖 T-Rex Mode', 'desc': 'Keep your elbows tucked into your ribs and act like a T-Rex for 2 minutes!'},
+      {'title': '🤫 Silent Treatment', 'desc': 'Don\'t say a single word (even through text) for the next 15 minutes.'},
+      {'title': '🐒 Monkey See', 'desc': 'Imitate the movements/sounds of the last person you saw for 2 minutes.'},
+      {'title': '🧱 Wall Talk', 'desc': 'Have a 1-minute serious conversation with a wall about its favorite color.'},
+      {'title': '🧘 Slow Motion', 'desc': 'Do everything in SUPER SLOW MOTION for the next 5 minutes.'},
+      {'title': '🧦 Sock Puppet', 'desc': 'Put a sock on your hand and introduce it to everyone as your "Manager".'},
+      {'title': '🥨 Human Pretzel', 'desc': 'Try to touch your nose with your toe! (Don\'t break anything!)'},
+      {'title': '🎤 Bathroom Concert', 'desc': 'Sing "Baby Shark" loudly like you\'re at a rock concert.'},
+      {'title': '🤣 Dad Joke Master', 'desc': 'Call a friend and tell them the worst dad joke you know.'},
+      {'title': '🦒 Giraffe Challenge', 'desc': 'Walk on your tiptoes with your neck stretched as high as possible for 1 min.'},
+      {'title': '🍋 Sour Face', 'desc': 'Eat a slice of lemon without making ANY faces. Record it!'},
     ];
 
     showDialog(
@@ -299,6 +304,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             Tab(icon: Icon(Icons.people), text: 'Users'),
             Tab(icon: Icon(Icons.feedback), text: 'Feedback'),
             Tab(icon: Icon(Icons.emoji_events), text: 'Challenges'),
+            Tab(icon: Icon(Icons.question_answer), text: 'Quizzes'),
           ],
         ),
       ),
@@ -308,6 +314,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           _buildUsersTab(),
           _buildFeedbackTab(),
           _buildChallengesTab(),
+          _buildQuizzesTab(),
         ],
       ),
     );
