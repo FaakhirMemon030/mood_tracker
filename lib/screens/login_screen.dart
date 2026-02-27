@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/firebase_service.dart';
 import '../models/admin_details.dart';
 import 'signup_screen.dart';
@@ -107,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 24),
                 _isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0))
                     : ElevatedButton(
                         onPressed: _login,
                         style: ElevatedButton.styleFrom(

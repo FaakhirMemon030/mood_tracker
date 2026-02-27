@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/firebase_service.dart';
 
 class FeedbackScreen extends StatefulWidget {
@@ -79,7 +80,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               ),
               const SizedBox(height: 24),
               _isSubmitting
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0))
                   : ElevatedButton(
                       onPressed: _submitFeedback,
                       style: ElevatedButton.styleFrom(

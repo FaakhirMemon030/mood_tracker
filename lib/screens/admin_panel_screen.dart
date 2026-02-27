@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/firebase_service.dart';
 import '../models/user_model.dart';
 import '../models/feedback_model.dart';
@@ -37,7 +38,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     return StreamBuilder<List<UserModel>>(
       stream: _service.getAllUsers(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+        if (!snapshot.hasData) return Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0));
         final users = snapshot.data!;
         
         return ListView.builder(
@@ -80,7 +81,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     return StreamBuilder<List<FeedbackModel>>(
       stream: _service.getAllFeedback(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+        if (!snapshot.hasData) return Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0));
         final feedbacks = snapshot.data!;
         
         return ListView.builder(
@@ -112,7 +113,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
       body: StreamBuilder<List<ChallengeModel>>(
         stream: _service.getChallenges(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+          if (!snapshot.hasData) return Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0));
           final challenges = snapshot.data!;
           
           return ListView.builder(

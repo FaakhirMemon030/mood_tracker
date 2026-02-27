@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/firebase_service.dart';
 import '../models/user_model.dart';
 import '../models/challenge_model.dart';
@@ -93,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(body: Center(child: SpinKitWave(color: Theme.of(context).primaryColor, size: 30.0)));
     }
 
     if (_user == null) {
